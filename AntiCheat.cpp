@@ -109,8 +109,9 @@ static bool checkSuspiciousProcesses() {
 
 static bool getSelfPath(std::wstring& pathOut) {
     wchar_t path[MAX_PATH]{};
-    if (!GetModuleFileNameW(nullptr, path, MAX_PATH)) return false;
-    pathOut = path;
+    const DWORD length = GetModuleFileNameW(nullptr, path, MAX_PATH);
+    if (length == 0 || length >= MAX_PATH) return false;
+    pathOut.assign(path, length);
     return true;
 }
 
